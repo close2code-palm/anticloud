@@ -1,0 +1,42 @@
+version: "3"
+
+networks:
+  anticloud-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.63.0.0/16
+
+services:
+  api_gate:
+    build:
+      context: .
+    container_name: api_gate
+    ports:
+      - "8000:8000"
+    depends_on:
+      clamav:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      anticloud-net:
+        ipv4_address: 172.63.0.2
+
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+    container_name: clamav
+    ports:
+      - "3310:3310"
+    volumes:
+      - clam:/var/lib/clamav
+    networks:
+      anticloud-net:
+        ipv4_address: 172.63.0.3
+    healthcheck:
+      test: [ "CMD", "./check.sh" ]
+      interval: 10s
+      retries: 7
+
+volumes:
+  clam:
