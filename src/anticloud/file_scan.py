@@ -11,14 +11,10 @@ class FileScanner:
         self.clamd = clamav_client
 
     def scan_io(self, data: bytes) -> str | None:
-        for i in range(4):
-            try:
-                result = self.clamd.instream(BytesIO(data))
-                break
-            except BrokenPipeError:
-                logging.error("retry %s", i + 1)
-                continue
-        else:
+        try:
+            result = self.clamd.instream(BytesIO(data))
+        except BrokenPipeError as e:
+            logging.error(f"Broken pipe, %s", str(e))
             raise CheckFailed
         status, reason = list(result.values())[0]
         if status == "OK":

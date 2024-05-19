@@ -20,7 +20,7 @@ def app_factory():
         try:
             result = scanner.scan_io(buf)
         except clamd.BufferTooLongError:
-            raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Не удалось просканировать")
+            raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Не удалось просканировать большой файл")
         except CheckFailed:
             raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Не удалось обработать файл")
         if result:

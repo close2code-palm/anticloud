@@ -33,6 +33,10 @@ services:
     networks:
       anticloud-net:
         ipv4_address: 172.63.0.3
+    environment:
+      CLAMD_CONF_MaxFileSize: 250M
+      CLAMD_CONF_MaxScanSize: 250M
+      CLAMD_CONF_StreamMaxLength: 250M
     healthcheck:
       test: [ "CMD", "./check.sh" ]
       interval: 10s
