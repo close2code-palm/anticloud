@@ -36,7 +36,7 @@ services:
     healthcheck:
       test: [ "CMD", "./check.sh" ]
       interval: 10s
-      retries: 7
+      retries: 20
 
 volumes:
   clam:
